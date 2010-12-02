@@ -1,10 +1,65 @@
+*3.0.2
+
+* dom_id and dom_class can now be set as option in the item's definition (useful for dynamic menu items).
+
+*3.0.1
+
+* allow controller instance variables named @template for rails3 apps. Credits to cmartyn.
+* added possibility to specify and item's URL as a block which is evaulated after the :if and :unless conditions have been checked. Credits to Nicholas Firth-McCoy.
+* upgraded to rspec 2.0.0
+* fixed cgi error in sinatra adapter. Credits to Jack Dempsey.
+
+*3.0.0
+
+* added ability to specify dynamic items using an array of hashes. Credits to Anshul Khandelwal for input and discussion.
+* added ability to specify attributes for the generated link-tag in list renderer (up to now the attributes have been applied to the li-tag). Credits to Anthony Navarre for input and discussion.
+
+*3.0.0.beta2
+
+* moving code for initializing plugin in sinatra to separate gem
+
+*3.0.0.beta1
+
+* moving deprecated rails controller methods (navigation, current_navigation) to separate file 'rails_controller_methods'. Deprecations removed. File can be required explicitly if controller methods should be still available.
+* decoupling from Rails. Introducing the concept of adapters to work with several frameworks. 
+* tested with Rails 3.0.0
+* adding support for Sinatra and Padrino frameworks.
+* cherry picking active_support stuff instead of requiring the whole bunch (tested with active_support >= 2.3.2 and 3.0.0)
+* created public sample project which includes demo for Rails2, Rails3, Sinatra and Padrino (will be available on github soon)
+* better src file organization (adapters/core/rendering folders)
+
+*2.7.3
+
+* initializing SimpleNavigation.config_file_path with empty array (was nil before). Allows for adding paths before gem has been initialized.
+
+*2.7.2
+
+* added ability to have more than one config_file_path (useful if simple-navigation is used as a part of another gem/plugin). Credits to Luke Imhoff.
+
+*2.7.1
+
+* added SimpleNavigation.request and SimpleNavigation.request_uri as abstraction for getting request_uri (rails2/rails3)
+* use request.fullpath instead of request.request_uri for Rails3. Credits to Ben Langfeld.
+
+*2.7.0
+
+* added new option :highlights_on to item definition in config-file. Specify a regexp which is matched against the current_uri to determine if an item is active or not. Replaces explicit highlighting in controllers.
+* deprecated explicit highlighting in the controllers.
+
+*2.6.0
+
+* added rendering option 'skip_if_empty' to Renderer::List to avoid rendering of empty ul-tags
+* added breadcrumbs renderer incl. specs. A big thanks to Markus Schirp.
+* added ability to register a renderer / specify your renderer as symbol in render_navigation
+* renderer can be specified in render_navigation. Credits to Andi Bade from Galaxy Cats.
+
 *2.5.4
 
 * bugfix: SimpleNavigation.config_file? without params does not check for _navigation.rb file anymore. Credits to Markus Schirp.
 
 *2.5.3
 
-* removed depreciated railtie_name from simple_navigation/railtie. Credits to Markus Schirp.
+* removed deprecated railtie_name from simple_navigation/railtie. Credits to Markus Schirp.
 
 *2.5.2
 
@@ -37,7 +92,7 @@
 
 *2.2.3
 
-* changed error handling in config-file. Do not ignore errors in config-file anymore. 
+* changed error handling in config-file. Do not ignore errors in config-file anymore.
 * only load config-file if it is present. Needed when directly providing items in render_navigation.
 
 *2.2.2
@@ -67,16 +122,16 @@
 *2.0.0
 
 * added auto_highlight feature. Active navigation is determined by comparing urls, no need to explicitly set it in the controllers anymore. Thanks to Jack Dempsey and Florian Hanke for the support on this.
-* added ability to create multi-level navigations (not just limited to primary and secondary navigation). Thanks again to Jack Dempsey for the motivation ;-) 
+* added ability to create multi-level navigations (not just limited to primary and secondary navigation). Thanks again to Jack Dempsey for the motivation ;-)
 * simplified the process to explicitly set the navigation in the controller (where needed) - only deepest level has to be specified
-* made auto_highlight feature configurable both on global and item_container's level 
+* made auto_highlight feature configurable both on global and item_container's level
 * config file is now evaluated in template if ever possible (not in controller anymore)
 
 *1.4.2
 
 * explicitly loading all source files when requiring 'simple_navigation'.
 
-*1.4.0 
+*1.4.0
 
 * added the capability to have several navigation-contexts
 * doc-fix

@@ -1,7 +1,6 @@
 ENV["RAILS_ENV"] = "test"
 require 'rubygems'
-require 'spec'
-require 'active_support'
+require 'rspec'
 require 'action_controller'
 
 module Rails
@@ -15,11 +14,22 @@ $:.unshift File.join(File.dirname(__FILE__), '../lib')
 
 require 'simple_navigation'
 
-SimpleNavigation.rails_root = './'
+# SimpleNavigation.root = './'
+RAILS_ROOT = './' unless defined?(RAILS_ROOT)
+RAILS_ENV = 'test' unless defined?(RAILS_ENV)
 
-# Spec::Runner.configure do |config|
-  # no special config
-# endx
+
+RSpec.configure do |config|
+  # == Mock Framework
+  #
+  # If you prefer to use mocha, flexmock or RR, uncomment the appropriate line:
+  #
+  # config.mock_with :mocha
+  # config.mock_with :flexmock
+  # config.mock_with :rr
+  config.mock_with :rspec
+
+end
 
 # spec helper methods
 def sub_items
@@ -33,7 +43,7 @@ def primary_items
   [
     [:users, 'users', 'first_url', {:id => 'my_id'}],
     [:invoices, 'invoices', 'second_url', {}],
-    [:accounts, 'accounts', 'third_url', {:style => 'float:right'}]
+    [:accounts, 'accounts', 'third_url', {:style => 'float:right', :link => {:style => 'float:left'}}]
   ]
 end
 
@@ -53,7 +63,14 @@ def primary_item(key)
 end
 
 def select_item(key)
-  primary_item(key) {|item| item.stub!(:selected? => true)}
+  if(key == :subnav1)
+    select_item(:invoices)
+    primary_item(:invoices) do |item|
+      item.instance_variable_get(:@sub_navigation).items.find { |i| i.key == key}.stub!(:selected? => true)
+    end
+  else
+    primary_item(key) {|item| item.stub!(:selected? => true) unless item.frozen?}
+  end
 end
 
 def subnav_container
@@ -62,4 +79,13 @@ def subnav_container
   items.each {|i| i.stub!(:selected? => false)}
   container.instance_variable_set(:@items, items)
   container
+end
+
+def setup_renderer_for(renderer_class, framework, options)
+  adapter = case framework
+  when :rails
+    SimpleNavigation::Adapters::Rails.new(stub(:context, :view_context => ActionView::Base.new))
+  end
+  SimpleNavigation.stub!(:adapter => adapter)
+  @renderer = renderer_class.new(options)
 end
